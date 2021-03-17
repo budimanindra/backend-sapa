@@ -1,7 +1,7 @@
 const upload = require('../helpers/upload').single('photo')
 const multer = require('multer')
 const bcrypt = require('bcrypt')
-const userModel = require('../models/users')
+const profileModel = require('../models/profile')
 const response = require('../helpers/response')
 
 exports.updateUserDetails = async (req, res) => {
@@ -10,7 +10,7 @@ exports.updateUserDetails = async (req, res) => {
     email, password, fullName, phoneNumber
   } = req.body
   try {
-    const row = await userModel.getUsersByIdAsync(id)
+    const row = await profileModel.getUsersByIdAsync(id)
     const user = row[0]
     if (!user) {
       return response(res, 400, false, 'Failed to edit profile, unknown user id')
@@ -25,7 +25,7 @@ exports.updateUserDetails = async (req, res) => {
         phoneNumber: phoneNumber || user.phoneNumber
       }
       try {
-        const updateProfile = await userModel.updateUserDetails(editedUser, id)
+        const updateProfile = await profileModel.updateUserDetails(editedUser, id)
         if (!updateProfile) {
           return response(res, 400, false, 'Failed to edit profile')
         } else {
@@ -57,7 +57,7 @@ exports.updatePhoto = async (req, res) => {
         photo: `${req.file.destination}/${req.file.filename}` || null
       }
       console.log(Data)
-      const result = await userModel.updateUserPhoto(Data)
+      const result = await profileModel.updateUserPhoto(Data)
       console.log(result)
       return response(res, 200, true, 'Successfully update photo profile')
     } catch (err) {
@@ -69,7 +69,7 @@ exports.updatePhoto = async (req, res) => {
 exports.getUserDetails = async (req, res) => {
   const { id } = req.userData
   try {
-    const row = await userModel.getUsersByIdAsync(id)
+    const row = await profileModel.getUsersByIdAsync(id)
     const user = row[0]
     if (!user) {
       return response(res, 404, false, 'Failed to get user profile, unknown user id')
