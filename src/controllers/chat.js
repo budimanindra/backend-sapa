@@ -33,3 +33,14 @@ exports.sendChat = async (req, res) => {
   }
   return response(res, 200, true, 'Chat sent')
 }
+
+// exports.sendChat2 = async (req, res) => {
+//   const { id } = req.userData
+//   const { receiver, message } = req.body
+//   const results = await chatModel.sendChat(id, receiver, message)
+//   if (results.insertId > 0) {
+//     const chat = await chatModel.getChatById(results.insertId)
+//     req.socket.emit(`${id}-${receiver}`, chat[0])
+//   }
+//   return response(res, 200, true, 'Chat sent')
+// }

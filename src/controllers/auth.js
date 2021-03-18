@@ -47,3 +47,28 @@ exports.register = async (req, res) => {
     return response(res, 400, false, 'Register Failed, username or email already exists!')
   }
 }
+
+exports.deleteAccount = async (req, res) => {
+  const { id } = req.userData
+  const { password } = req.body
+  const existingUser = await userModel.getUsersByIdAsync(id)
+  if (existingUser.length > 0) {
+    const compare = await bcrypt.compare(password, existingUser[0].password)
+    if (compare) {
+      try {
+        const deleteAccount = await userModel.deleteUserById(id)
+        if (deleteAccount.affectedRows > 0) {
+          return response(res, 200, true, 'Account deleted successfully')
+        } else {
+          return response(res, 400, false, 'Failed to delete account')
+        }
+      } catch (err) {
+        return response(res, 500, false, 'Failed to delete account, server error')
+      }
+    } else {
+      return response(res, 400, false, 'Wrong user password')
+    }
+  } else {
+    return response(res, 400, false, 'Theres no account to delete')
+  }
+}

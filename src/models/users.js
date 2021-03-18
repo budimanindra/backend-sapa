@@ -12,6 +12,18 @@ exports.getUsersByConditionAsync = (cond) => {
   })
 }
 
+exports.getUsersByIdAsync = (id) => {
+  return new Promise((resolve, reject) => {
+    const query = db.query(`
+    SELECT * FROM users WHERE id=${id}
+  `, (err, res, field) => {
+      if (err) reject(err)
+      resolve(res)
+    })
+    console.log(query.sql)
+  })
+}
+
 exports.createUserAsync = (data) => {
   return new Promise((resolve, reject) => {
     const query = db.query(`
@@ -19,6 +31,19 @@ exports.createUserAsync = (data) => {
     (${Object.keys(data).join()})
     VALUES
     (${Object.values(data).map(item => `"${item}"`).join(',')})
+    `, (err, res, field) => {
+      if (err) reject(err)
+      resolve(res)
+    })
+    console.log(query.sql)
+  })
+}
+
+exports.deleteUserById = (id) => {
+  return new Promise((resolve, reject) => {
+    const query = db.query(`
+    DELETE FROM users
+    WHERE id = ${id}
     `, (err, res, field) => {
       if (err) reject(err)
       resolve(res)

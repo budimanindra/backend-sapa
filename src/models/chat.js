@@ -3,7 +3,7 @@ const db = require('../helpers/db')
 exports.getChat = (id, receiver) => {
   return new Promise((resolve, reject) => {
     const query = db.query(`
-    SELECT * FROM chat_history WHERE sender_id=${id} AND receiver_id = ${receiver} OR sender_id = ${receiver} AND receiver_id = ${id} ORDER BY createdAt DESC
+    SELECT * FROM chat_history WHERE sender_id=${id} AND receiver_id = ${receiver} OR sender_id = ${receiver} AND receiver_id = ${id} 
   `, (err, res, field) => {
       if (err) reject(err)
       resolve(res)
@@ -11,6 +11,8 @@ exports.getChat = (id, receiver) => {
     console.log(query.sql)
   })
 }
+
+// ORDER BY createdAt DESC
 
 exports.sendChat = (senderId, receiverId, message) => {
   return new Promise((resolve, reject) => {
