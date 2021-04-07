@@ -31,7 +31,7 @@ exports.updateUserPhoto = (data) => {
 exports.getUsersByIdAsync = (id) => {
   return new Promise((resolve, reject) => {
     const query = db.query(`
-      SELECT * FROM users WHERE id=${id}
+      SELECT photo, email, username, password FROM users WHERE id=${id}
     `, (err, res, field) => {
       if (err) reject(err)
       resolve(res)

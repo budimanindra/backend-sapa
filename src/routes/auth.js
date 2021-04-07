@@ -4,6 +4,6 @@ const authorization = require('../middlewares/auth')
 
 routes.post('/login', authController.login)
 routes.post('/register', authController.register)
-routes.delete('/', authorization.authCheck, authController.deleteAccount)
+routes.post('/', authorization.authCheck, authController.deleteAccount)
 
 module.exports = routes

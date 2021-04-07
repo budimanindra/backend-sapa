@@ -7,8 +7,9 @@ const response = require('../helpers/response')
 exports.updateUserDetails = async (req, res) => {
   const { id } = req.userData
   const {
-    email, password, fullName, phoneNumber
+    email, password, username
   } = req.body
+  console.log(password)
   try {
     const row = await profileModel.getUsersByIdAsync(id)
     const user = row[0]
@@ -16,117 +17,13 @@ exports.updateUserDetails = async (req, res) => {
       return response(res, 400, false, 'Failed to edit profile, unknown user id')
     } else {
       const salt = await bcrypt.genSalt()
-      const encryptedPassword = await bcrypt.hash(password, salt)
+      const encryptedPassword = password ? await bcrypt.hash(password, salt) : ''
       const editedUser = {
         ...user,
+        photo: user.photo,
         email: email || user.email,
         password: password ? encryptedPassword : user.password,
-        fullName: fullName || user.fullName,
-        phoneNumber: phoneNumber || user.phoneNumber
-      }
-      try {
-        const updateProfile = await profileModel.updateUserDetails(editedUser, id)
-        if (!updateProfile) {
-          return response(res, 400, false, 'Failed to edit profile')
-        } else {
-          return response(res, 200, true, 'Successfully to edit profile', {
-            ...editedUser,
-            password: 'secret'
-          })
-        }
-      } catch (err) {
-        return response(res, 500, false, 'Failed to edit profile')
-      }
-    }
-  } catch (err) {
-    return response(res, 500, false, 'Failed to edit profile')
-  }
-}
-
-exports.updateUsername = async (req, res) => {
-  const { id } = req.userData
-  const {
-    username
-  } = req.body
-  try {
-    const row = await profileModel.getUsersByIdAsync(id)
-    const user = row[0]
-    if (!user) {
-      return response(res, 400, false, 'Failed to edit profile, unknown user id')
-    } else {
-      const editedUser = {
-        ...user,
         username: username || user.username
-      }
-      try {
-        const updateProfile = await profileModel.updateUserDetails(editedUser, id)
-        if (!updateProfile) {
-          return response(res, 400, false, 'Failed to edit profile')
-        } else {
-          return response(res, 200, true, 'Successfully to edit profile', {
-            ...editedUser,
-            password: 'secret'
-          })
-        }
-      } catch (err) {
-        return response(res, 500, false, 'Failed to edit profile')
-      }
-    }
-  } catch (err) {
-    return response(res, 500, false, 'Failed to edit profile')
-  }
-}
-
-exports.updateEmail = async (req, res) => {
-  const { id } = req.userData
-  const {
-    email
-  } = req.body
-  try {
-    const row = await profileModel.getUsersByIdAsync(id)
-    const user = row[0]
-    if (!user) {
-      return response(res, 400, false, 'Failed to edit profile, unknown user id')
-    } else {
-      const editedUser = {
-        ...user,
-        email: email || user.email
-      }
-      try {
-        const updateProfile = await profileModel.updateUserDetails(editedUser, id)
-        if (!updateProfile) {
-          return response(res, 400, false, 'Failed to edit profile')
-        } else {
-          return response(res, 200, true, 'Successfully to edit profile', {
-            ...editedUser,
-            password: 'secret'
-          })
-        }
-      } catch (err) {
-        return response(res, 500, false, 'Failed to edit profile')
-      }
-    }
-  } catch (err) {
-    return response(res, 500, false, 'Failed to edit profile')
-  }
-}
-
-exports.updatePassword = async (req, res) => {
-  const { id } = req.userData
-  const {
-    password
-  } = req.body
-  try {
-    const row = await profileModel.getUsersByIdAsync(id)
-    const user = row[0]
-    if (!user) {
-      return response(res, 400, false, 'Failed to edit profile, unknown user id')
-    } else {
-      const salt = await bcrypt.genSalt()
-      const encryptedPassword = await bcrypt.hash(password, salt)
-      const editedUser = {
-        ...user,
-        password: password ? encryptedPassword : user.password
       }
       try {
         const updateProfile = await profileModel.updateUserDetails(editedUser, id)

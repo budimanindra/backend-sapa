@@ -52,7 +52,9 @@ exports.deleteAccount = async (req, res) => {
   const { id } = req.userData
   const { password } = req.body
   const existingUser = await userModel.getUsersByIdAsync(id)
+  // console.log(existingUser)
   if (existingUser.length > 0) {
+    console.log((password, existingUser[0].password))
     const compare = await bcrypt.compare(password, existingUser[0].password)
     if (compare) {
       try {

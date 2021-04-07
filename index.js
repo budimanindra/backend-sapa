@@ -28,7 +28,7 @@ app.use(cors('*'))
 app.use('/uploads', express.static('uploads'))
 app.use('/auth', require('./src/routes/auth'))
 app.use('/profile', require('./src/routes/profile'))
-app.use('/friends', require('./src/routes/friends'))
+app.use('/', require('./src/routes/friends'))
 app.use('/chat', require('./src/routes/chat'))
 
 app.get('/', (request, response) => {
