@@ -6,7 +6,7 @@ exports.updateUserDetails = (data, id) => {
     const value = Object.values(data)
     const query = db.query(`
       UPDATE users 
-      SET ${key.map((item, index) => `${item}="${value[index]}"`)}
+      SET ${key.map((item, index) => `${item}=${value[index] ? `"${value[index]}"` : null}`)}
       WHERE id=${id}`, (err, res, field) => {
       if (err) reject(err)
       resolve(res)
@@ -31,7 +31,7 @@ exports.updateUserPhoto = (data) => {
 exports.getUsersByIdAsync = (id) => {
   return new Promise((resolve, reject) => {
     const query = db.query(`
-      SELECT photo, email, username, password FROM users WHERE id=${id}
+      SELECT id, photo, email, username, password FROM users WHERE id=${id}
     `, (err, res, field) => {
       if (err) reject(err)
       resolve(res)

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 const { APP_KEY } = process.env
 const response = require('../helpers/response')
+const { check, validationResult } = require('express-validator')
 
 exports.authCheck = (req, res, next) => {
   const { authorization } = req.headers
@@ -14,3 +15,45 @@ exports.authCheck = (req, res, next) => {
   }
   return response(res, 401, false, 'Authorization needed')
 }
+
+exports.isFieldsEmpty = [
+  check('password', "password can't be empty")
+    .notEmpty(),
+  check('email', "email can't be empty")
+    .notEmpty(),
+  check('username', "username can't be empty")
+    .notEmpty(),
+  (req, res, next) => {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      return response(res, 400, false, errors.array()[0].msg)
+    }
+
+    return next()
+  }
+]
+
+exports.isFieldsLength = [
+  check('password', 'Password must be at least 8 characters')
+    .isLength({
+      min: 8
+    }),
+  check('username', 'Username must be at least 8 characters')
+    .isLength({
+      min: 8
+    }),
+  check('email', 'Email must be at least 8 characters')
+    .isLength({
+      min: 8
+    }),
+  (req, res, next) => {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      return response(res, 400, false, errors.array()[0].msg)
+    }
+
+    return next()
+  }
+]

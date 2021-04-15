@@ -9,7 +9,6 @@ exports.updateUserDetails = async (req, res) => {
   const {
     email, password, username
   } = req.body
-  console.log(password)
   try {
     const row = await profileModel.getUsersByIdAsync(id)
     const user = row[0]
@@ -20,7 +19,6 @@ exports.updateUserDetails = async (req, res) => {
       const encryptedPassword = password ? await bcrypt.hash(password, salt) : ''
       const editedUser = {
         ...user,
-        photo: user.photo,
         email: email || user.email,
         password: password ? encryptedPassword : user.password,
         username: username || user.username
