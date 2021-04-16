@@ -43,10 +43,22 @@ exports.isFieldsLength = [
     .isLength({
       min: 8
     }),
-  check('email', 'Email must be at least 8 characters')
-    .isLength({
-      min: 8
-    }),
+  (req, res, next) => {
+    const errors = validationResult(req)
+
+    if (!errors.isEmpty()) {
+      return response(res, 400, false, errors.array()[0].msg)
+    }
+
+    return next()
+  }
+]
+
+exports.isFieldsLegalChars = [
+  check('username', 'Please enter valid username. Use only numbers and alphabets')
+    .isAlphanumeric(),
+  check('email', 'Please enter valid email address')
+    .matches(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
   (req, res, next) => {
     const errors = validationResult(req)
 
